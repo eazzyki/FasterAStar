@@ -119,16 +119,6 @@ int PathAlgorithm::searchIndex(const std::vector<Cell> &container, const Cell &c
 }
 
 
-bool PathAlgorithm::contains(const std::vector<Cell> &container, const Cell &cell) {
-    for(Cell c : container) {
-        if(c == cell) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 typedef std::pair<unsigned long, Cell> MyPairType;
 struct CompareCells {
     bool operator()(const MyPairType& left, const MyPairType& right) const {
@@ -143,10 +133,44 @@ Cell PathAlgorithm::findMinF(std::unordered_map<unsigned long, Cell> &map) {
 }
 
 
+Cell PathAlgorithm::findMinF(std::vector<Cell>& v) {
+    int minF = int(INFINITY);
+    Cell cellMinF;
+    for (Cell c : v) {
+        if (c.f < minF) {
+            cellMinF = c;
+            minF = c.f;
+        }
+    }
+    return cellMinF;
+}
+
+
 bool PathAlgorithm::contains(const std::unordered_map<unsigned long, Cell> &map, const Cell &cell) {
     auto it = map.find(cell2index(cell));
     if(it != map.end()) {
         return true;
+    }
+    return false;
+}
+
+
+bool PathAlgorithm::contains(const std::vector<Cell> &container, const Cell &cell, int& idx) {
+    for(int i = 0; i < container.size(); i++) {
+        if(container[i] == cell) {
+            idx = i;
+            return true;
+        }
+    }
+    idx = -1;
+    return false;
+}
+
+bool PathAlgorithm::contains(const std::vector<Cell> &container, const Cell &cell) {
+    for(int i = 0; i < container.size(); i++) {
+        if(container[i] == cell) {
+            return true;
+        }
     }
     return false;
 }
@@ -160,3 +184,4 @@ void PathAlgorithm::setStart(QPointF start) {
 void PathAlgorithm::setGoal(QPointF goal) {
     this->goal = Cell(goal.x(), goal.y());
 }
+

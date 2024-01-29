@@ -7,14 +7,13 @@ class AStar : public PathAlgorithm {
 
 public:
 
-    Path computePath() override;
+    virtual void computePath(Path& path, std::vector<Cell>& visitedCells) = 0;
 
-private:
+protected:
 
     double computeG(Cell start, Cell dest);
     double computeH(Cell start, Cell dest);
 
-    void goalReached(std::vector<std::vector<Cell>> parentGrid, Path& path);
 };
 
 #endif // ASTAR_H

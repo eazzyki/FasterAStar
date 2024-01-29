@@ -17,6 +17,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     astar.cpp \
+    astarfast.cpp \
+    astarheap.cpp \
+    dijkstra.cpp \
     factory.cpp \
     grid.cpp \
     main.cpp \
@@ -26,9 +29,13 @@ SOURCES += \
 
 HEADERS += \
     astar.h \
+    astarfast.h \
+    astarheap.h \
+    dijkstra.h \
     factory.h \
     grid.h \
     mainwindow.h \
+    owntypes.h \
     pathalgorithm.h \
     stats.h
 

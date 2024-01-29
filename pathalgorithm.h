@@ -7,8 +7,10 @@
 #include <iostream>
 #include <unordered_map>
 #include <math.h>
+#include <functional>
 
 #include <stats.h>
+#include "grid.h"
 
 
 class PathAlgorithm {
@@ -19,7 +21,6 @@ protected:
     Path shortestPath;
 
 public:
-
     Stats stats;
 
     PathAlgorithm();
@@ -36,16 +37,19 @@ public:
 
     std::vector<Cell> successors(Cell cell);
     int searchIndex(const std::vector<Cell>& container, const Cell& cell);
-    bool contains(const std::vector<Cell>& container, const Cell& cell);
     Cell findMinF(std::unordered_map<unsigned long, Cell>& map);
+    Cell findMinF(std::vector<Cell>& v);
     bool contains(const std::unordered_map<unsigned long, Cell>& map, const Cell& cell);
+    bool contains(const std::vector<Cell>& container, const Cell& cell, int& idx);
+    bool contains(const std::vector<Cell>& container, const Cell& cell);
+
 
     void setStart(QPointF start);
     void setGoal(QPointF goal);
 
     void initialize(int width, int height, int cellLength, QList<QPointF> list);
 
-    virtual Path computePath() = 0;
+    virtual void computePath(Path& path, std::vector<Cell>& visitedCells) = 0;
 };
 
 #endif // PATHALGORITHM_H

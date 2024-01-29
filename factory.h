@@ -2,12 +2,15 @@
 #define FACTORY_H
 
 #include "pathalgorithm.h"
-#include "astar.h"
+#include "astarfast.h"
+#include "astarheap.h"
+#include "dijkstra.h"
 #include <memory>
 
 enum AlgName {
-    ASTAR,
-    DIJCSTRA
+    ASTARFAST,
+    ASTARHEAP,
+    DIJKSTRA
 };
 
 

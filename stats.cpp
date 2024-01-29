@@ -29,3 +29,15 @@ std::string Stats::getStats() {
 void Stats::setCalcTime(calc_t time) {
     this->calcTime = time;
 }
+
+
+void Stats::addVisitedCell(Cell cell) {
+
+    this->visitedCells.push_back(cell);
+
+
+    increaseAnalyzedCells();
+
+
+
+}

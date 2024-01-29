@@ -2,14 +2,15 @@
 
 std::unique_ptr<PathAlgorithm> Factory::makeInstance(AlgName alg) {
     switch (alg) {
-    case ASTAR:
-        return std::make_unique<AStar>();
+    case ASTARFAST:
+        return std::make_unique<AStarFast>();
         break;
-    case DIJCSTRA:
-        return nullptr;
+    case ASTARHEAP:
+        return std::make_unique<AStarHeap>();
         break;
-    default:
-        return nullptr;
+    case DIJKSTRA:
+        return std::make_unique<Dijkstra>();
         break;
     }
 }
+

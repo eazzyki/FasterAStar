@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 
 #include "grid.h"
+#include "factory.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +34,7 @@ private slots:
     void on_pushBtnResetPath_clicked();
     void on_pushBtnResetEnv_clicked();
     void on_horizontalSlider_valueChanged(int value);
+    void on_comboBoxAlg_currentIndexChanged(int s);
     void updateInfoBox(QString text);
 
 private:
@@ -41,5 +43,7 @@ private:
     QList<QGraphicsRectItem*> tiles;
     Grid* grid = new Grid();
     int cellLength = 25;
+    AlgName comboBoxAlgValue;
+
 };
 #endif // MAINWINDOW_H

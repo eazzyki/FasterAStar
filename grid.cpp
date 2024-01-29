@@ -109,19 +109,27 @@ QList<QPointF> Grid::getObstacles() {
 }
 
 
-void Grid::drawPath(QList<QPointF> path) {
-    for (QPointF point : path) {
+void Grid::draw(QList<QPointF>& points, QBrush brush) {
+    for (QPointF point : points) {
         QGraphicsItem *item = itemAt(point, QTransform());
         if (item != nullptr) {
             QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
-            coloringCell(rec, QBrush(Qt::blue));
+            coloringCell(rec, brush);
         } else {
-            std::cout << "Grid cannot draw the Path!!!" << std::endl;
+            std::cout << "Grid cannot draw the Cells!!!" << std::endl;
         }
     }
-    this->shortestPath = path;
 }
 
+void Grid::drawPath(QList<QPointF> &points, QBrush brush) {
+    draw(points, QBrush(Qt::blue));
+    this->shortestPath = points;
+}
+
+void Grid::drawVisitedCells(QList<QPointF> &points, QBrush brush) {
+    draw(points, QBrush(Qt::yellow));
+    this->visitedCells = points;
+}
 
 void Grid::resetPath() {
     for (QPointF point : this->shortestPath) {
@@ -135,6 +143,7 @@ void Grid::resetPath() {
 }
 
 
+
 void Grid::resetObstacles() {
     for (QPointF point : this->obstacles) {
         QGraphicsItem *item = itemAt(point, QTransform());
@@ -146,6 +155,28 @@ void Grid::resetObstacles() {
     this->obstacles.clear();
 }
 
+
+void Grid::resetAnalyzedCells() {
+    for (QPointF point : this->visitedCells) {
+        QGraphicsItem *item = itemAt(point, QTransform());
+        if (item != nullptr) {
+            QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
+            coloringCell(rec, QBrush(Qt::white));
+        }
+    }
+    this->visitedCells.clear();
+}
+
+void Grid::reset(QList<QPointF>& cont) {
+    for (QPointF point : cont) {
+        QGraphicsItem *item = itemAt(point, QTransform());
+        if (item != nullptr) {
+            QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
+            coloringCell(rec, QBrush(Qt::white));
+        }
+    }
+    cont.clear();
+}
 
 void Grid::setupGrid(int cellLength) {
     this->clear();

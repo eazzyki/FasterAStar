@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "factory.h"
 
 #include <QDebug>
 #include <QScreen>
@@ -25,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->horizontalSlider->setSingleStep(5);
     ui->horizontalSlider->setTickInterval(5);
+
+    ui->comboBoxAlg->addItems({"A* (Fast)", "A* (Heap)", "Dijkstra"});
+
 
     QGraphicsView *view = ui->graphicsView;
     view->setMinimumSize(width-400, height);
@@ -64,7 +66,9 @@ void MainWindow::on_comboBoxEnv_currentIndexChanged(int s) {
 
 void MainWindow::on_pushBtnStart_clicked() {
     grid->resetPath();
-    std::unique_ptr<PathAlgorithm> alg = Factory::makeInstance(AlgName::ASTAR);
+    grid->resetAnalyzedCells();
+
+    std::unique_ptr<PathAlgorithm> alg = Factory::makeInstance(this->comboBoxAlgValue);
 
     alg->initialize(ui->graphicsView->width(),
                     ui->graphicsView->height(),
@@ -73,27 +77,44 @@ void MainWindow::on_pushBtnStart_clicked() {
     alg->setStart(grid->getStart());
     alg->setGoal(grid->getGoal());
 
-    auto t1 = std::chrono::high_resolution_clock::now();
-    Path path = alg->computePath();
-    auto t2 = std::chrono::high_resolution_clock::now();
-    alg->stats.setCalcTime(std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1));
+    Path shortesPath;
+    std::vector<Cell> visited;
 
+    auto t1 = std::chrono::high_resolution_clock::now();
+    alg->computePath(shortesPath, visited);
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    alg->stats.setCalcTime(std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1));
     updateInfoBox(QString::fromStdString(alg->stats.getStats()));
 
+    if (ui->checkBoxDrawVisited->isChecked()) {
+        QList<QPointF> l1;
+        for (Cell p : visited) {
+            QPointF temp;
+            p = alg->cellLocal2cellGlobal(p);
+            temp.setX(p.x);
+            temp.setY(p.y);
+            l1.push_back(temp);
+        }
+        grid->drawVisitedCells(l1, QBrush(Qt::yellow));
+    }
+
     QList<QPointF> l;
-    for (Cell p : path.path) {
+    for (Cell p : shortesPath.path) {
         QPointF temp;
         p = alg->cellLocal2cellGlobal(p);
         temp.setX(p.x);
         temp.setY(p.y);
         l.push_back(temp);
     }
-    grid->drawPath(l);
+    grid->drawPath(l, QBrush(Qt::blue));
+
 }
 
 
 void MainWindow::on_pushBtnResetPath_clicked() {
     grid->resetPath();
+    grid->resetAnalyzedCells();
 }
 
 
@@ -108,6 +129,25 @@ void MainWindow::on_horizontalSlider_valueChanged(int value) {
         grid->setupGrid(roundedValue);
         this->cellLength = roundedValue;
     }
+}
+
+
+void MainWindow::on_comboBoxAlg_currentIndexChanged(int s) {
+    AlgName algname;
+    switch (s) {
+    case 0:
+        algname = ASTARFAST;
+        break;
+    case 1:
+        algname = ASTARHEAP;
+        break;
+    case 2: algname = DIJKSTRA;
+        break;
+    default:
+        algname = ASTARFAST;
+        break;
+    }
+    this->comboBoxAlgValue = algname;
 }
 
 
