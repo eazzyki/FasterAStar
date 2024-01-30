@@ -1,6 +1,8 @@
 #ifndef OWNTYPES_H
 #define OWNTYPES_H
 
+#include <vector>
+#include <iostream>
 
 struct Cell {
     int x, y;
@@ -44,6 +46,7 @@ struct Cell {
 
 };
 
+
 struct Grid2d {
     std::vector<std::vector<bool>> grid;
 
@@ -62,6 +65,7 @@ struct Grid2d {
     }
 };
 
+
 struct Path {
     std::vector<Cell> path;
 
@@ -78,6 +82,5 @@ struct Path {
         return os;
     }
 };
-
 
 #endif // OWNTYPES_H

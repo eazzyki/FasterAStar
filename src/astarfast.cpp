@@ -1,7 +1,6 @@
-#include "dijkstra.h"
-#include <queue>
+#include "astarfast.h"
 
-void Dijkstra::goalReached(std::vector<std::vector<Cell> > parentGrid, Path &path) {
+void AStarFast::goalReached(std::vector<std::vector<Cell> > parentGrid, Path &path) {
     Cell currentCell = cellGlobal2cellLocal(this->goal);
     Cell startLocal = cellGlobal2cellLocal(this->start);
     while (currentCell != startLocal) {
@@ -14,29 +13,24 @@ void Dijkstra::goalReached(std::vector<std::vector<Cell> > parentGrid, Path &pat
 }
 
 
-void Dijkstra::computePath(Path &path, std::vector<Cell> &visitedCells) {
+void AStarFast::computePath(Path &path, std::vector<Cell> &visitedCells) {
     Cell start = cellGlobal2cellLocal(this->start);
     Cell goal = cellGlobal2cellLocal(this->goal);
 
-    std::vector<Cell> open_list;
-    std::vector<Cell> closed_list;
+    std::unordered_map<unsigned long, Cell> open_list;
+    std::unordered_map<unsigned long, Cell> closed_list;
     std::vector<std::vector<Cell>> parent_array;
     parent_array.resize(this->widthGrid, std::vector<Cell>(this->heightGrid));
 
-    open_list.push_back(start);
-//    std::make_heap(open_list.begin(), open_list.end(), std::greater<>{});
+    open_list.insert({cell2index(start), start});
 
-    int idxSuccessor;
     while (!open_list.empty()) {
         // get cell with lowest f from open_list
-        std::make_heap(open_list.begin(), open_list.end(), std::greater<>());
-        std::pop_heap(open_list.begin(), open_list.end(), std::greater<>());
-        Cell currentCell = open_list.back();
-
+        Cell currentCell = findMinF(open_list);
         this->stats.increaseAnalyzedCells();
 
         // remove currentCell from open_list
-        open_list.pop_back();
+        open_list.erase(cell2index(currentCell));
 
         if (currentCell == goal) {
             goalReached(parent_array, path);
@@ -50,34 +44,29 @@ void Dijkstra::computePath(Path &path, std::vector<Cell> &visitedCells) {
                 continue;
             }
 
-            // compute g which will be saved in
-            successorCell.g = currentCell.g + computeG(currentCell, successorCell);
-            successorCell.f = successorCell.g;
+            // compute g, h and f
+            successorCell.g = computeG(currentCell, successorCell);
+            successorCell.h = computeH(successorCell, goal);
+            successorCell.f = successorCell.g + successorCell.h;
 
 
             // check if successor is already in open_list with smaller f -> skip successor
-            if (contains(open_list, successorCell, idxSuccessor)) {
-                if (successorCell < open_list[idxSuccessor]) {
-                    open_list[idxSuccessor] = successorCell;
+            auto successor_it = open_list.find(cell2index(successorCell));
+
+            if (successor_it != open_list.end()) {
+                if (successorCell < successor_it->second) {
+                    successor_it->second = successorCell;
                     parent_array[successorCell.x][successorCell.y] = currentCell;
                 }
             } else {
-                open_list.push_back(successorCell);
+                open_list.insert({cell2index(successorCell), successorCell});
                 parent_array[successorCell.x][successorCell.y] = currentCell;
             }
         }
-        closed_list.push_back(currentCell);
+        closed_list.insert({cell2index(currentCell), currentCell});
         if(currentCell != start) {
             visitedCells.push_back(currentCell);
         }
-//        if (currentCell != start) {
-//            QPointF t;
-//            Cell c = cellLocal2cellGlobal(currentCell);
-//            t.setX(c.x);
-//            t.setY(c.y);
-//            gridptr->analyzedCells.push_back(t);
-//            gridptr->coloringCell(t, QBrush(Qt::yellow));
-//        }
-
     }
 }
+

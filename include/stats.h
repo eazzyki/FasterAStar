@@ -2,20 +2,17 @@
 #define STATS_H
 
 #include <string>
-#include <iostream>
-#include <vector>
 #include <chrono>
-
 #include "owntypes.h"
 
 using calc_t = std::chrono::milliseconds;
 class Stats {
 
+private:
     long numCellsAnalyzed;
     int pathLength;
     calc_t calcTime;
     std::vector<Cell> visitedCells;
-
 
 public:    
     Stats();

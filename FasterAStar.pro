@@ -15,32 +15,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-SOURCES += \
-    astar.cpp \
-    astarfast.cpp \
-    astarheap.cpp \
-    dijkstra.cpp \
-    factory.cpp \
-    grid.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    pathalgorithm.cpp \
-    stats.cpp
+SOURCES += $$files(src/*.cpp)
+HEADERS += $$files(include/*.h)
+FORMS += mainwindow.ui
 
-HEADERS += \
-    astar.h \
-    astarfast.h \
-    astarheap.h \
-    dijkstra.h \
-    factory.h \
-    grid.h \
-    mainwindow.h \
-    owntypes.h \
-    pathalgorithm.h \
-    stats.h
+INCLUDEPATH += include/
 
-FORMS += \
-    mainwindow.ui
+release: DESTDIR = $$PWD/bin/release
+debug: DESTDIR = $$PWD/bin/debug
+
+OBJECTS_DIR = $$DESTDIR/.obj
+MOC_DIR = $$DESTDIR/.moc
+RCC_DIR = $$DESTDIR/.qrc
+UI_DIR = $$DESTDIR/.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

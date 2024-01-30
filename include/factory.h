@@ -1,7 +1,6 @@
 #ifndef FACTORY_H
 #define FACTORY_H
 
-#include "pathalgorithm.h"
 #include "astarfast.h"
 #include "astarheap.h"
 #include "dijkstra.h"
@@ -12,7 +11,6 @@ enum AlgName {
     ASTARHEAP,
     DIJKSTRA
 };
-
 
 class Factory {
 public:

@@ -1,23 +1,6 @@
 #include "pathalgorithm.h"
 
-PathAlgorithm::PathAlgorithm() {
-
-}
-
-
-PathAlgorithm::PathAlgorithm(int width, int height, int cellLength, QList<QPointF> p)
-{
-    this->widthGrid = width/cellLength;
-    this->heightGrid = height/cellLength;
-    this->cellLength = cellLength;
-    this->grid1d.resize(widthGrid*heightGrid, false);
-
-    // fill 1dgrid with obstacles
-    for (QPointF point : p) {
-        long idx = cell2index(point);
-        this->grid1d[idx] = true;
-    }
-}
+PathAlgorithm::PathAlgorithm() {}
 
 
 void PathAlgorithm::initialize(int width, int height, int cellLength, QList<QPointF> list) {
@@ -31,16 +14,13 @@ void PathAlgorithm::initialize(int width, int height, int cellLength, QList<QPoi
         long idx = cell2index(point);
         this->grid1d[idx] = true;
     }
-
 }
 
 
-Cell PathAlgorithm::cellGlobal2cellLocal(Cell cell)
-{
-    Cell t;
-    t.x = cell.x / this->cellLength;
-    t.y = cell.y / this->cellLength;
-    return t;
+Cell PathAlgorithm::cellGlobal2cellLocal(Cell cell) {
+    cell.x = cell.x / this->cellLength;
+    cell.y = cell.y / this->cellLength;
+    return cell;
 }
 
 
@@ -79,7 +59,6 @@ bool PathAlgorithm::isTraversableCell(Cell cell) {
     if (!isValidCell(cell)) {
         return false;
     }
-
     if (this->grid1d[cell2index(cell)] == true) {
         return false;
     }
@@ -91,6 +70,7 @@ std::vector<Cell> PathAlgorithm::successors(Cell cell) {
     std::vector<Cell> successors;
     for(int i = -1; i < 2; i++) {
         for(int j = -1; j < 2; j++) {
+            // comment out if statement to get all 8 neighbors (eg. diagonal)
             if (i != 0 && j != 0) {
                 continue;
             }
@@ -108,7 +88,6 @@ std::vector<Cell> PathAlgorithm::successors(Cell cell) {
 
 int PathAlgorithm::searchIndex(const std::vector<Cell> &container, const Cell &cell) {
   int indexCell = -1;
-
   for (int i = 0; i < container.size(); i++) {
     if(cell == container[i]){
       indexCell = i;

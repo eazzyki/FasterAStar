@@ -1,7 +1,6 @@
 #include "stats.h"
 
-Stats::Stats()
-{
+Stats::Stats() {
     this->numCellsAnalyzed = 0;
     this->pathLength = 0;
 }
@@ -32,12 +31,6 @@ void Stats::setCalcTime(calc_t time) {
 
 
 void Stats::addVisitedCell(Cell cell) {
-
     this->visitedCells.push_back(cell);
-
-
     increaseAnalyzedCells();
-
-
-
 }

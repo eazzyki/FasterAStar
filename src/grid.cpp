@@ -2,8 +2,7 @@
 #include <iostream>
 #include <QDebug>
 
-Grid::Grid()
-{
+Grid::Grid() {
     start = QPointF(-1, -1);
     goal = QPointF(-1, -1);
 }
@@ -17,54 +16,58 @@ Grid::Grid(qreal x, qreal y, qreal w, qreal h) {
 
 
 void Grid::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (this->isRadioBtnClicked) {
-        QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
-        if (item != nullptr) {
-            QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
-            if (this->comboBoxIdx == 0) {
+    QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
+    if (item != nullptr) {
+        QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
+        if (this->comboBoxIdx == 0) {
+            if (rec->brush().color() != Qt::green) {
                 if (this->start.x() != -1) {
                     coloringCell(this->start, QBrush(Qt::white));
                 }
                 coloringCell(rec, QBrush(Qt::red));
                 this->start = rec->scenePos();
-            } else if (this->comboBoxIdx == 1) {
+            }
+        } else if (this->comboBoxIdx == 1) {
+            if (rec->brush().color() != Qt::red) {
                 if (this->goal.x() != -1) {
                     coloringCell(this->goal, QBrush(Qt::white));
                 }
                 coloringCell(rec, QBrush(Qt::green));
                 this->goal = rec->scenePos();
-            } else if (this->comboBoxIdx == 2) {
-                if (event->buttons() & Qt::LeftButton) {
+            }
+        } else if (this->comboBoxIdx == 2) {
+            if (event->buttons() & Qt::LeftButton) {
+                if (rec->brush().color() == Qt::white){
                     coloringCell(rec, QBrush(Qt::black));
                     this->obstacles.push_back(rec->scenePos());
-                } else if (event->buttons() & Qt::RightButton) {
+                }
+            } else if (event->buttons() & Qt::RightButton) {
+                if (rec->brush().color() == Qt::black) {
                     coloringCell(rec, QBrush(Qt::white));
                     this->obstacles.erase(std::remove(this->obstacles.begin(), this->obstacles.end(), rec->scenePos()), this->obstacles.end());
                 }
-            } else {
-                qDebug() << "Wrong ComboBox text!";
             }
+        } else {
+            qDebug() << "Wrong ComboBox text!";
         }
     }
 }
 
 
 void Grid::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    if (this->isRadioBtnClicked) {
-        if (this->comboBoxIdx == 2) {
-            QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
-            if (item != nullptr) {
-                QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
-                if (event->buttons() & Qt::LeftButton) {
-                    if (rec->brush().color() == Qt::white) {
-                        coloringCell(rec, QBrush(Qt::black));
-                        this->obstacles.push_back(rec->scenePos());
-                    }
-                } else if (event->buttons() & Qt::RightButton) {
-                    if (rec->brush().color() == Qt::black) {
-                        coloringCell(rec, QBrush(Qt::white));
-                        this->obstacles.erase(std::remove(this->obstacles.begin(), this->obstacles.end(), rec->scenePos()), this->obstacles.end());
-                    }
+    if (this->comboBoxIdx == 2) {
+        QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
+        if (item != nullptr) {
+            QGraphicsRectItem* rec = (QGraphicsRectItem*) item;
+            if (event->buttons() & Qt::LeftButton) {
+                if (rec->brush().color() == Qt::white) {
+                    coloringCell(rec, QBrush(Qt::black));
+                    this->obstacles.push_back(rec->scenePos());
+                }
+            } else if (event->buttons() & Qt::RightButton) {
+                if (rec->brush().color() == Qt::black) {
+                    coloringCell(rec, QBrush(Qt::white));
+                    this->obstacles.erase(std::remove(this->obstacles.begin(), this->obstacles.end(), rec->scenePos()), this->obstacles.end());
                 }
             }
         }
@@ -86,11 +89,6 @@ void Grid::coloringCell(QGraphicsRectItem* item, QBrush brush) {
 
 void Grid::setComboBox(int id) {
     this->comboBoxIdx = id;
-}
-
-
-void Grid::setRadioBtn(bool b) {
-    this->isRadioBtnClicked = b;
 }
 
 
@@ -122,12 +120,12 @@ void Grid::draw(QList<QPointF>& points, QBrush brush) {
 }
 
 void Grid::drawPath(QList<QPointF> &points, QBrush brush) {
-    draw(points, QBrush(Qt::blue));
+    draw(points, brush);
     this->shortestPath = points;
 }
 
 void Grid::drawVisitedCells(QList<QPointF> &points, QBrush brush) {
-    draw(points, QBrush(Qt::yellow));
+    draw(points, brush);
     this->visitedCells = points;
 }
 
@@ -180,6 +178,10 @@ void Grid::reset(QList<QPointF>& cont) {
 
 void Grid::setupGrid(int cellLength) {
     this->clear();
+    this->start.setX(-1);
+    this->start.setY(-1);
+    this->goal.setX(-1);
+    this->goal.setY(-1);
 
     qint32 y_pos = 0;
     while (y_pos < this->height()) {

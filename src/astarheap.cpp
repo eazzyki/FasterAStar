@@ -23,7 +23,6 @@ void AStarHeap::computePath(Path &path, std::vector<Cell> &visitedCells) {
     parent_array.resize(this->widthGrid, std::vector<Cell>(this->heightGrid));
 
     open_list.push_back(start);
-//    std::make_heap(open_list.begin(), open_list.end(), std::greater<>{});
 
     int idxSuccessor;
     while (!open_list.empty()) {
@@ -34,7 +33,6 @@ void AStarHeap::computePath(Path &path, std::vector<Cell> &visitedCells) {
 
         this->stats.increaseAnalyzedCells();
 
-//        std::cout << currentCell << std::endl;
         // remove currentCell from open_list
         open_list.pop_back();
 

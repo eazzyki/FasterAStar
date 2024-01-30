@@ -58,32 +58,14 @@
          <number>6</number>
         </property>
         <item>
-         <widget class="QRadioButton" name="radioButtonEnv">
+         <widget class="QLabel" name="labelEdit">
           <property name="text">
-           <string>Edit Environment </string>
+           <string>Edit Environment</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QComboBox" name="comboBoxEnv"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QPushButton" name="pushBtnResetPath">
-            <property name="text">
-             <string>Reset Path</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushBtnResetEnv">
-            <property name="text">
-             <string>Reset Env</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
         <item>
          <widget class="QSlider" name="horizontalSlider">
@@ -118,6 +100,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel" name="labelAlg">
+          <property name="text">
+           <string>Algorithm:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBoxAlg"/>
+        </item>
+        <item>
          <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -134,14 +126,22 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="labelAlg">
-          <property name="text">
-           <string>Algorithm:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBoxAlg"/>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="pushBtnResetPath">
+            <property name="text">
+             <string>Reset Path</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushBtnResetEnv">
+            <property name="text">
+             <string>Reset Env</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer">
@@ -235,7 +235,7 @@
    </property>
    <widget class="QMenu" name="menuTEst">
     <property name="title">
-     <string>Test</string>
+     <string/>
     </property>
    </widget>
    <addaction name="menuTEst"/>
