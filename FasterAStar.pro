@@ -22,7 +22,7 @@ FORMS += mainwindow.ui
 INCLUDEPATH += include/
 
 release: DESTDIR = $$PWD/bin/release
-debug: DESTDIR = $$PWD/bin/debug
+debug: DESTDIR = $$PWD/bin/
 
 OBJECTS_DIR = $$DESTDIR/.obj
 MOC_DIR = $$DESTDIR/.moc

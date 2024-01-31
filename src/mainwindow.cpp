@@ -5,6 +5,8 @@
 #include <iostream>
 #include <chrono>
 
+#include <numeric>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -60,37 +62,45 @@ void MainWindow::on_pushBtnStart_clicked() {
         alg->setStart(grid->getStart());
         alg->setGoal(grid->getGoal());
 
-        Path shortesPath;
-        std::vector<Cell> visited;
+//        std::vector<float> times;
+//        for (int i = 0; i < 10; i++) {
+            Path shortesPath;
+            std::vector<Cell> visited;
 
-        auto t1 = std::chrono::high_resolution_clock::now();
-        alg->computePath(shortesPath, visited);
-        auto t2 = std::chrono::high_resolution_clock::now();
+            auto t1 = std::chrono::high_resolution_clock::now();
+            alg->computePath(shortesPath, visited);
+            auto t2 = std::chrono::high_resolution_clock::now();
 
-        alg->stats.setCalcTime(std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1));
-        updateInfoBox(QString::fromStdString(alg->stats.getStats()));
+            alg->stats.setCalcTime(std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1));
+            updateInfoBox(QString::fromStdString(alg->stats.getStats()));
 
-        if (ui->checkBoxDrawVisited->isChecked()) {
-            QList<QPointF> l1;
-            for (Cell p : visited) {
+//            times.push_back(std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count());
+
+            if (ui->checkBoxDrawVisited->isChecked()) {
+                QList<QPointF> l1;
+                for (Cell p : visited) {
+                    QPointF temp;
+                    p = alg->cellLocal2cellGlobal(p);
+                    temp.setX(p.x);
+                    temp.setY(p.y);
+                    l1.push_back(temp);
+                }
+                grid->drawVisitedCells(l1, QBrush(QColor(0, 180, 252, 50)));
+            }
+
+            QList<QPointF> l;
+            for (Cell p : shortesPath.path) {
                 QPointF temp;
                 p = alg->cellLocal2cellGlobal(p);
                 temp.setX(p.x);
                 temp.setY(p.y);
-                l1.push_back(temp);
+                l.push_back(temp);
             }
-            grid->drawVisitedCells(l1, QBrush(QColor(0, 180, 252, 50)));
-        }
-
-        QList<QPointF> l;
-        for (Cell p : shortesPath.path) {
-            QPointF temp;
-            p = alg->cellLocal2cellGlobal(p);
-            temp.setX(p.x);
-            temp.setY(p.y);
-            l.push_back(temp);
-        }
-        grid->drawPath(l, QBrush(Qt::blue));
+            grid->drawPath(l, QBrush(Qt::blue));
+//            }
+//        auto const count = static_cast<float>(times.size());
+//        std::cout << "Time (avg): ";
+//        std::cout << std::accumulate(times.begin(), times.end(), 0) / count << std::endl;
     }
 }
 

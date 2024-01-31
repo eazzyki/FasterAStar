@@ -14,13 +14,7 @@ protected:
     Cell start, goal;
     Path shortestPath;
 
-public:
-    Stats stats;
-
-    PathAlgorithm();
-
-    Cell cellGlobal2cellLocal(Cell cell);
-    Cell cellLocal2cellGlobal(Cell cell);
+protected:
     unsigned long cell2index(Cell cell);
     unsigned long cell2index(QPointF cell);
     void index2cell(unsigned long index, Cell& cell);
@@ -34,12 +28,18 @@ public:
     bool contains(const std::unordered_map<unsigned long, Cell>& map, const Cell& cell);
     bool contains(const std::vector<Cell>& container, const Cell& cell, int& idx);
     bool contains(const std::vector<Cell>& container, const Cell& cell);
+
+public:
+    Stats stats;
+
+    PathAlgorithm();
+    Cell cellGlobal2cellLocal(Cell cell);
+    Cell cellLocal2cellGlobal(Cell cell);
     void setStart(QPointF start);
     void setGoal(QPointF goal);
     void initialize(int width, int height, int cellLength, QList<QPointF> list);
 
-    //TODO: Let childs inherit goalReached function
-
+    //TODO: implement goalReached function in parent class
     virtual void computePath(Path& path, std::vector<Cell>& visitedCells) = 0;
 };
 
